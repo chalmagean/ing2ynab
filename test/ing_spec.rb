@@ -3,14 +3,14 @@ require "csv"
 
 describe Ing do
   describe ".csv" do
-    it "returns an empty string" do
+    it "doesn't print anything to the screen" do
       CSV.open("testing.csv", "w") { |csv| csv << [] }
 
       assert_output("") { Ing.new("testing.csv").csv }
     end
 
     describe "when the file has transactions" do
-      it "outputs data in CSV format" do
+      it "prints data in CSV format to the screen" do
         CSV.open("testing.csv", "w") do |csv|
           csv << ["Date;Description;Credit;Debit"]
           csv << ["01 noiembrie 2020;Desc1;123.91"]
