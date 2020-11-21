@@ -3,13 +3,14 @@ require "ing/transaction"
 
 class Ing
   def initialize(file_name)
-    @csv = CSV.read(file_name, headers: :first_row, return_headers: false)
+    @csv = CSV.read(file_name)
+    @headers = @csv.shift
     @transactions = transactions
   end
 
   def csv
     return if @transactions.empty?
-    puts @transactions.map(&:to_s).join("\n").chomp
+    puts (@headers + @transactions).map(&:to_s).join("\n").chomp
   end
 
   def transactions

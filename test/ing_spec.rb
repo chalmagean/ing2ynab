@@ -17,8 +17,8 @@ describe Ing do
           csv << [";Desc2"]
         end
 
-          #Date;Description;Credit;Debit
         csv = <<~CSV
+          Date;Description;Credit;Debit
           2020-11-01;Desc1Desc2;0.0;123.91
         CSV
         assert_output(csv) { Ing.new("testing.csv").csv }
