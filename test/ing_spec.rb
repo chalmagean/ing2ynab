@@ -2,12 +2,11 @@ require "test_helper"
 require "csv"
 
 describe Ing do
-  describe ".run" do
+  describe ".csv" do
     it "returns an empty list" do
       CSV.open("testing.csv", "w") { |csv| csv << [] }
 
-      ing = Ing.new("testing.csv")
-      _(ing.run).must_equal []
+      assert_output("") { Ing.new("testing.csv").csv }
     end
 
     describe "when the file has transactions" do
@@ -18,13 +17,11 @@ describe Ing do
           csv << [";Desc2"]
         end
 
-        result = Ing.new("testing.csv").run
-        assert_equal result.length, 1
-        transaction = result.first
-        assert_equal transaction.details, "Desc1Desc2"
-        assert_equal transaction.date, Date.new(2020, 11, 1)
-        assert_equal transaction.credit, 123.91
-        assert_equal transaction.debit, 0.0
+          #Date;Description;Credit;Debit
+        csv = <<~CSV
+          2020-11-01;Desc1Desc2;0.0;123.91
+        CSV
+        assert_output(csv) { Ing.new("testing.csv").csv }
       end
     end
   end

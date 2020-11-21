@@ -1,26 +1,5 @@
-require "ruby_jard"
 require "csv"
-
-class Transaction
-  attr_accessor :details, :date, :debit, :credit
-
-  def initialize(details: "", date: nil, debit: 0.0, credit: 0.0)
-    @details = details
-    @date = date
-    @debit = debit
-    @credit = credit
-  end
-
-  def self.from_data(data)
-    date, desc, credit, debit = data.split(";")
-    new(
-      date: Date.parse(date),
-      details: desc,
-      credit: credit&.empty? ? nil : credit.to_f,
-      debit: debit&.empty? ? nil : debit.to_f
-    )
-  end
-end
+require "ing/transaction"
 
 class Ing
   def initialize(file_name)
@@ -28,8 +7,9 @@ class Ing
     @transactions = transactions
   end
 
-  def run
-    @transactions
+  def csv
+    return if @transactions.empty?
+    puts @transactions.map(&:to_s).join("\n").chomp
   end
 
   def transactions
