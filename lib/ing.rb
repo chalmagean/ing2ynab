@@ -2,8 +2,8 @@ require "csv"
 require "ing/transaction"
 
 class Ing
-  def initialize(file_name)
-    @csv = CSV.read(file_name)
+  def initialize(file)
+    @csv = file
     @headers = @csv.shift
     @transactions = transactions
   end
