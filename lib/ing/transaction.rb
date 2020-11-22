@@ -1,33 +1,47 @@
 class Transaction
-  attr_accessor :details, :date, :debit, :credit
+  PAYEE_REGEX = /Beneficiar:/
+  FIELDS_SEPARATOR = "|"
 
-  def initialize(details: [], date: nil, debit: 0.0, credit: 0.0)
-    @details = details
+  attr_reader :date, :payee, :outflow, :inflow, :memo
+
+  def initialize(date:, payee:, outflow:, inflow:, memo: nil)
     @date = date
-    @debit = debit
-    @credit = credit
+    @payee = payee
+    @outflow = outflow
+    @inflow = inflow
+    @memo = memo
   end
 
   def self.from_data(row)
     date, _, desc, _, _, credit, _, debit = row
+    payee, memo = parse_description(desc)
 
     new(
       date: Date.parse(date),
-      details: [desc],
-      credit: to_float(credit),
-      debit: to_float(debit)
+      payee: payee,
+      memo: memo,
+      outflow: to_float(credit),
+      inflow: to_float(debit)
     )
   end
 
   def to_s
-    [date, details.join("\n"), credit, debit].join(",")
+    [date.strftime("%d/%m/%Y"), payee, memo, outflow, inflow].join(";")
   end
 
   private
 
+    # Turns float strings from "2.000,12" to 2000.12
     def self.to_float(str)
       return 0.0 if str.nil? || str.empty?
 
       str.gsub(/\./, "").gsub(/,/, ".").to_f
     end
+
+    def self.parse_description(desc)
+      fields = desc.split(FIELDS_SEPARATOR)
+      payee = fields.find { |el| el.match?(PAYEE_REGEX) }
+      [payee.split(":").last, fields.first]
+    end
+
 end
