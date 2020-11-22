@@ -3,20 +3,18 @@ require "test_helper"
 describe Transaction do
   describe ".from_data" do
     it "returns a new object" do
-      source_row = [
-        "01 octombrie 2020",
-        nil,
-        "Transfer Home'Bank|Beneficiar:John Doe|Banca:INGB CENTRALA",
-        nil,
-        nil,
-        "123.00",
-        nil,
-        "231.12"
-      ]
+      source_row = {
+        date: "01 octombrie 2020",
+        desc: "Transfer Home'Bank|Beneficiar:John Doe|Banca:INGB CENTRALA",
+        credit: "123,00",
+        debit: "1.231,12"
+      }
       result = Transaction.from_data(source_row)
       _(result).must_be_instance_of(Transaction)
       _(result.payee).must_equal "John Doe"
       _(result.memo).must_equal "Transfer Home'Bank"
+      _(result.outflow).must_equal 123.0
+      _(result.inflow).must_equal 1231.12
     end
   end
 

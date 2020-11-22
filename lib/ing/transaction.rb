@@ -1,8 +1,10 @@
 class Transaction
-  PAYEE_REGEX = /Beneficiar:/
+  PAYEE_REGEX = /(Beneficiar:|Terminal:)/
   FIELDS_SEPARATOR = "|"
+  COLUMN_SEPARATOR = ";"
 
-  attr_reader :date, :payee, :outflow, :inflow, :memo
+  attr_reader :date, :payee, :outflow, :inflow
+  attr_accessor :memo
 
   def initialize(date:, payee:, outflow:, inflow:, memo: nil)
     @date = date
@@ -13,20 +15,20 @@ class Transaction
   end
 
   def self.from_data(row)
-    date, _, desc, _, _, credit, _, debit = row
-    payee, memo = parse_description(desc)
+    payee, memo = parse_description(row[:desc])
 
     new(
-      date: Date.parse(date),
+      date: Date.parse(row[:date]),
       payee: payee,
       memo: memo,
-      outflow: to_float(credit),
-      inflow: to_float(debit)
+      outflow: to_float(row[:credit]),
+      inflow: to_float(row[:debit])
     )
   end
 
   def to_s
-    [date.strftime("%d/%m/%Y"), payee, memo, outflow, inflow].join(";")
+    [date.strftime("%d/%m/%Y"), payee, memo, outflow, inflow]
+      .join(COLUMN_SEPARATOR)
   end
 
   private
