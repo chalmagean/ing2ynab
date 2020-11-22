@@ -19,6 +19,7 @@ describe Ing do
           03/10/2020;Patreon* Membership IE INTERNET;Cumparare POS;49.74;0.0
           07/10/2020;HBO EUROPE SRO CZ;Cumparare POS;9.57;0.0
           12/10/2020;God;Transfer Home'Bank;58.0;0.0
+          28/10/2020;Batman;Incasare;0.0;500.0
         CSV
         result = Ing.new("test/fixtures/ing_export.csv").csv
         _(result).must_equal expected.chomp

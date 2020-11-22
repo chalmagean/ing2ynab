@@ -1,5 +1,5 @@
 class Transaction
-  PAYEE_REGEX = /(Beneficiar:|Terminal:)/
+  PAYEE_REGEX = /(Beneficiar:|Terminal:|Ordonator:)/
   FIELDS_SEPARATOR = "|"
   COLUMN_SEPARATOR = ";"
 
